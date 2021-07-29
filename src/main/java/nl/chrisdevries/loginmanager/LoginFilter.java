@@ -28,15 +28,19 @@ public class LoginFilter extends OncePerRequestFilter {
 
     @Autowired
     private LoginFailManager loginManager;
+
     @Value("${login-fail-manager.bannedMessageHtmlPath:}")
     private String bannedMessageHtmlPath;
+
+    @Value("${login-fail-manager.enabled:}")
+    private boolean enabled = true;
 
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest,
                                     HttpServletResponse httpServletResponse, FilterChain filterChain)
             throws ServletException, IOException {
-        if (loginManager.checkBan(httpServletRequest.getRemoteAddr())) {
+        if (enabled && loginManager.checkBan(httpServletRequest.getRemoteAddr())) {
             httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
             if (bannedMessageHtmlPath == null || bannedMessageHtmlPath.isBlank()) {
                 httpServletResponse.getWriter().write("Too many login attempts.");
