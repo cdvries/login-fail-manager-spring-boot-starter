@@ -20,5 +20,4 @@ public class LoginFailManagerAutoConfiguration {
 	public LoginFailManager loginManager() {
 		return new LoginFailManager();
 	}
-
 }
